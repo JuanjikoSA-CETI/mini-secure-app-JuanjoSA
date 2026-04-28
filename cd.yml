@@ -1,0 +1,36 @@
+name: CD – Despliegue
+
+on:
+  push:
+    branches:
+      - desarrollo
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+
+      - name: Checkout del código
+        uses: actions/checkout@v4
+
+      - name: Parar despliegue anterior
+        run: docker-compose down || true
+
+      - name: Construir y levantar aplicación
+        run: docker-compose up -d --build
+
+      - name: Ver contenedores
+        run: docker ps
+
+      - name: Ver logs
+        run: docker logs mini-secure-app --tail 50
+
+      - name: Esperar a que arranque la aplicacion
+        run: sleep 10
+
+      - name: Comprobar aplicación
+        run: curl http://localhost:3001
+
+# test dedspliegue automatico
+  

@@ -1,7 +1,9 @@
 services:
-mini-secure-app:
-build: .
-container_name : mini-secure-app
-ports: 
-  - "3001:3001"
-restart: always
+  mini-secure-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mini-secure-app
+    ports:
+      - "3001:3001"
+    restart: always

@@ -173,6 +173,65 @@ app.get('/search', (req, res) => {
   );
 
   const items = results.length
-    ? results
-        .map(
-          (t) => `
+  ? results
+      .map(
+        (t) => `
+          <li>
+            <strong>${t.title}</strong><br/>
+            ${t.description}
+          </li>
+        `
+      )
+      .join('')
+  : '<li>No se encontraron resultados</li>';
+  res.send(`
+    <html>
+      <head><title>Resultados de búsqueda</title></head>
+      <body>
+        <h1>Resultados para "${q}"</h1>
+        <ul>
+          ${items}
+        </ul>
+        <p><a href="/">Volver</a></p>
+      </body>
+    </html>
+  `);
+});
+
+// Comentarios
+app.post('/comment', (req, res) => {
+  const { comment } = req.body;
+  comments.push(comment || 'Comentario vacío');
+
+  res.send(`
+    <html>
+      <head><title>Comentario guardado</title></head>
+      <body>
+        <h1>Comentario guardado</h1>
+        <p><a href="/comments">Ver comentarios</a></p>
+      </body>
+    </html>
+  `);
+});
+
+app.get('/comments', (req, res) => {
+  const items = comments
+    .map((c) => `<li>${c}</li>`)
+    .join('');
+
+  res.send(`
+    <html>
+      <head><title>Comentarios</title></head>
+      <body>
+        <h1>Comentarios</h1>
+        <ul>${items}</ul>
+        <p><a href="/">Volver</a></p>
+      </body>
+    </html>
+  `);
+});
+
+// Iniciar servidor
+app.listen(PORT, () => {
+  console.log(`Servidor escuchando en http://localhost:${PORT}`);
+});

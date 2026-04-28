@@ -1,10 +1,25 @@
 const express = require('express');
+const client = require('prom-client');   // <-- NUEVO
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+// Registro de métricas  <-- NUEVO
+const register = new client.Registry();
+client.collectDefaultMetrics({ register });
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
+// Endpoint /metrics para Prometheus  <-- NUEVO
+app.get('/metrics', async (req, res) => {
+  try {
+    res.set('Content-Type', register.contentType);
+    res.end(await register.metrics());
+  } catch (err) {
+    res.status(500).end(err);
+  }
+});
 
 // "Base de datos" en memoria
 const tickets = [
@@ -161,68 +176,3 @@ app.get('/search', (req, res) => {
     ? results
         .map(
           (t) => `
-            <li>
-              <strong>${t.title}</strong><br/>
-              ${t.description}
-            </li>
-          `
-        )
-        .join('')
-    : '<li>No se encontraron resultados</li>';
-
-  res.send(`
-    <html>
-      <head><title>Búsqueda</title></head>
-      <body>
-        <h1>Resultados de búsqueda para: ${q}</h1>
-        <ul>${items}</ul>
-        <p><a href="/">Volver</a></p>
-      </body>
-    </html>
-  `);
-});
-
-// Guardar comentario
-app.post('/comment', (req, res) => {
-  const { comment } = req.body;
-
-  comments.push(comment || '');
-
-  res.send(`
-    <html>
-      <head><title>Comentario guardado</title></head>
-      <body>
-        <h1>Comentario guardado</h1>
-        <p><a href="/comments">Ver comentarios</a></p>
-      </body>
-    </html>
-  `);
-});
-
-// Ver comentarios
-app.get('/comments', (req, res) => {
-  const items = comments.length
-    ? comments.map((c) => `<li>${c}</li>`).join('')
-    : '<li>No hay comentarios todavía</li>';
-
-  res.send(`
-    <html>
-      <head><title>Comentarios</title></head>
-      <body>
-        <h1>Comentarios</h1>
-        <ul>${items}</ul>
-        <p><a href="/">Volver</a></p>
-      </body>
-    </html>
-  `);
-});
-
-// Exportamos app para tests
-module.exports = app;
-
-// Solo escucha si se ejecuta directamente
-if (require.main === module) {
-  app.listen(PORT, () => {
-    console.log(`App running on http://localhost:${PORT}`);
-  });
-}

@@ -3,6 +3,8 @@ name: CI Basic
 on:
   push:
     branches: [ desarrollo ]
+    paths:
+      - '**'
   workflow_dispatch:
 
 jobs:

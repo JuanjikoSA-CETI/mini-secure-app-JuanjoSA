@@ -231,7 +231,12 @@ app.get('/comments', (req, res) => {
   `);
 });
 
-// Iniciar servidor
-app.listen(PORT, () => {
-  console.log(`Servidor escuchando en http://localhost:${PORT}`);
-});
+// Iniciar servidor solo si no estamos en test
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(PORT, () => {
+    console.log(`Servidor escuchando en http://localhost:${PORT}`);
+  });
+}
+
+module.exports = app;
+

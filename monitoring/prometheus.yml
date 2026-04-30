@@ -9,5 +9,6 @@ scrape_configs:
   - job_name: 'mini-secure-app'
     metrics_path: /metrics
     static_configs:
-      - targets: ['mini-secure-app:3001']
+      - targets: ['host.docker.internal:3001']
+
 

@@ -39,6 +39,9 @@ const comments = [];
 app.get('/', (req, res) => {
   const csrfToken = req.csrfToken();
 
+  app.get('/', (req, res) => {
+  const csrfToken = req.csrfToken();
+
   res.send(`
     <html>
       <head>
@@ -73,14 +76,18 @@ app.get('/', (req, res) => {
 });
 
 
+
 // Login simple
 app.get('/login', (req, res) => {
+  const csrfToken = req.csrfToken();
+
   res.send(`
     <html>
       <head><title>Login</title></head>
       <body>
         <h1>Login</h1>
         <form action="/login" method="POST">
+          <input type="hidden" name="_csrf" value="${csrfToken}">
           <label>Usuario:</label>
           <input type="text" name="username" /><br/><br/>
           <label>Contraseña:</label>
@@ -92,6 +99,7 @@ app.get('/login', (req, res) => {
     </html>
   `);
 });
+
 
 app.post('/login', (req, res) => {
   const { username } = req.body;
@@ -154,6 +162,7 @@ app.get('/ticket/new', (req, res) => {
     </html>
   `);
 });
+
 
 
 app.post('/ticket/new', (req, res) => {

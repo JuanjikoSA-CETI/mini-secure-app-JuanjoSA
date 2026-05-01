@@ -68,6 +68,23 @@ const tickets = [
 
 const comments = [];
 
+// --- RUTAS ESTÁTICAS PARA QUE PASEN POR HELMET ---
+// Evita que Express devuelva un 404 con CSP "default-src 'none'"
+
+app.get("/robots.txt", (req, res) => {
+  res.type("text/plain").send("User-agent: *\nDisallow:");
+});
+
+app.get("/sitemap.xml", (req, res) => {
+  res.type("application/xml").send(`
+    <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+      <url>
+        <loc>http://localhost:3001/</loc>
+      </url>
+    </urlset>
+  `);
+});
+
 // Página principal
 app.get('/', (req, res) => {
   const csrfToken = req.csrfToken();

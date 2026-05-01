@@ -5,6 +5,24 @@ const app = express();
 const cookieParser = require('cookie-parser');
 app.use(cookieParser());
 
+const helmet = require('helmet');
+app.use(helmet());
+
+app.use(
+  helmet.contentSecurityPolicy({
+    useDefaults: true,
+    directives: {
+      "default-src": ["'self'"],
+      "script-src": ["'self'"],
+      "style-src": ["'self'", "'unsafe-inline'"],
+      "img-src": ["'self'", "data:"],
+      "object-src": ["'none'"],
+      "frame-ancestors": ["'none'"]
+    }
+  })
+);
+
+
 const PORT = process.env.PORT || 3001;
 
 // Registro de métricas  <-- NUEVO

@@ -39,9 +39,6 @@ const comments = [];
 app.get('/', (req, res) => {
   const csrfToken = req.csrfToken();
 
-  app.get('/', (req, res) => {
-  const csrfToken = req.csrfToken();
-
   res.send(`
     <html>
       <head>
@@ -74,6 +71,7 @@ app.get('/', (req, res) => {
     </html>
   `);
 });
+
 
 
 

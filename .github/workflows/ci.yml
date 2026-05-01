@@ -34,16 +34,17 @@ jobs:
       - name: Escaneo de dependencias
         run: npm audit || true
 
-      - name: Iniciar aplicacion
-        run: |
-          npm start &
-          sleep 90
-          curl -I http://localhost:3001 || true
+      # ❌ ELIMINADO: ya no arrancamos la app en el runner
+      # - name: Iniciar aplicacion
+      #   run: |
+      #     npm start &
+      #     sleep 90
+      #     curl -I http://localhost:3001 || true
 
       - name: Ejecutar ZAP Scan
         uses: zaproxy/action-baseline@v0.15.0
         with:
-          target: 'http://localhost:3001'
+          target: 'http://mini-secure-app:3001'
           cmd_options: '-r report_html.html'
           allow_issue_writing: false
 

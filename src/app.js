@@ -13,28 +13,30 @@ app.use(
       directives: {
         defaultSrc: ["'self'"],
         scriptSrc: ["'self'"],
-        styleSrc: ["'self'", "'unsafe-inline'"],
+        styleSrc: ["'self'"], // quitamos unsafe-inline
         imgSrc: ["'self'", "data:"],
+        fontSrc: ["'self'"], // quitamos https:
         objectSrc: ["'none'"],
         frameAncestors: ["'none'"],
+        baseUri: ["'self'"],
+        formAction: ["'self'"],
+        scriptSrcAttr: ["'none'"],
+        upgradeInsecureRequests: [],
       },
     },
-    crossOriginEmbedderPolicy: true,
-    crossOriginOpenerPolicy: { policy: "same-origin" },
-    crossOriginResourcePolicy: { policy: "same-origin" },
+    referrerPolicy: { policy: "no-referrer" },
     frameguard: { action: "deny" },
     noSniff: true,
-    referrerPolicy: { policy: "no-referrer" },
     permissionsPolicy: {
-      fullscreen: ["'self'"],
-      camera: ["'none'"],
-      microphone: ["'none'"],
-      geolocation: ["'none'"],
+      features: {
+        camera: ["none"],
+        microphone: ["none"],
+        geolocation: ["none"],
+        fullscreen: ["self"],
+      },
     },
   })
 );
-
-
 
 const PORT = process.env.PORT || 3001;
 

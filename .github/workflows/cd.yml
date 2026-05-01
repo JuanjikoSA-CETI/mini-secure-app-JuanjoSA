@@ -18,7 +18,7 @@ jobs:
         run: docker-compose down || true
 
       - name: Construir y levantar aplicación
-        run: docker-compose up -d --build
+        run: docker compose up -d --build
 
       - name: Ver contenedores
         run: docker ps

@@ -44,6 +44,14 @@ app.use(
 
 const PORT = process.env.PORT || 3001;
 
+// "Base de datos" en memoria
+const tickets = [
+  { id: 1, title: 'Error al iniciar sesión', description: 'No puedo acceder con mi usuario' },
+  { id: 2, title: 'Fallo en el panel', description: 'El dashboard carga lentamente' }
+];
+
+const comments = [];
+
 // Registro de métricas
 const register = new client.Registry();
 client.collectDefaultMetrics({ register });
@@ -72,7 +80,7 @@ app.use(
   csrf({
     cookie: {
       httpOnly: true,
-      secure: true,
+      secure: process.env.NODE_ENV === "production",
       sameSite: "Strict",
     },
   })

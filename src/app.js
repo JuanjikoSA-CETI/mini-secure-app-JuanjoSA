@@ -2,6 +2,9 @@ const express = require('express');
 const client = require('prom-client');   // <-- NUEVO
 
 const app = express();
+const cookieParser = require('cookie-parser');
+app.use(cookieParser());
+
 const PORT = process.env.PORT || 3001;
 
 // Registro de métricas  <-- NUEVO
@@ -10,6 +13,9 @@ client.collectDefaultMetrics({ register });
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+const csrf = require('csurf');
+app.use(csrf({ cookie: true }));
+
 
 // Endpoint /metrics para Prometheus  <-- NUEVO
 app.get('/metrics', async (req, res) => {
@@ -31,6 +37,8 @@ const comments = [];
 
 // Página principal
 app.get('/', (req, res) => {
+  const csrfToken = req.csrfToken();
+
   res.send(`
     <html>
       <head>
@@ -55,6 +63,7 @@ app.get('/', (req, res) => {
 
         <h2>Añadir comentario</h2>
         <form action="/comment" method="POST">
+          <input type="hidden" name="_csrf" value="${csrfToken}">
           <textarea name="comment" rows="4" cols="50" placeholder="Escribe un comentario"></textarea><br/>
           <button type="submit">Guardar comentario</button>
         </form>
@@ -62,6 +71,7 @@ app.get('/', (req, res) => {
     </html>
   `);
 });
+
 
 // Login simple
 app.get('/login', (req, res) => {

@@ -28,7 +28,8 @@ jobs:
  
       - name: SAST con Semgrep
         run: |
-          pip3 install semgrep
+          export PATH=$PATH:/home/juanjo/.local/bin
+          pip3 install semgrep --user
           semgrep --config=auto
 
       - name: Escaneo de dependencias

@@ -34,12 +34,12 @@ jobs:
       - name: Escaneo de dependencias
         run: npm audit || true
 
-      # ❌ ELIMINADO: ya no arrancamos la app en el runner
-      # - name: Iniciar aplicacion
-      #   run: |
-      #     npm start &
-      #     sleep 90
-      #     curl -I http://localhost:3001 || true
+      - name: Levantar contenedores
+        run: |
+          docker compose down || true
+          docker compose up -d --build
+          sleep 20
+          curl -I http://mini-secure-app:3001 || true
 
       - name: Ejecutar ZAP Scan
         uses: zaproxy/action-baseline@v0.15.0

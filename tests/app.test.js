@@ -11,11 +11,13 @@ describe('Mini Secure Tickets App', () => {
   test('POST /ticket/new debe crear ticket', async () => {
     const agent = request.agent(app);
 
-    // 1. Obtener el formulario para capturar el token CSRF
+    // 1. GET para obtener cookie + token CSRF
     const getRes = await agent.get('/ticket/new');
+
+    // Extraer token CSRF del HTML
     const csrfToken = /name="_csrf" value="(.+?)"/.exec(getRes.text)[1];
 
-    // 2. Enviar el POST con el token CSRF y la cookie
+    // 2. POST enviando token + cookie (agent lo hace automáticamente)
     const postRes = await agent
       .post('/ticket/new')
       .send({
@@ -28,3 +30,4 @@ describe('Mini Secure Tickets App', () => {
     expect(postRes.text).toContain('Ticket guardado correctamente');
   });
 });
+

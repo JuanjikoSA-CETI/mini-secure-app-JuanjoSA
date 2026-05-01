@@ -35,7 +35,9 @@ app.use(
         fullscreen: ["self"],
       },
     },
-    crossOriginEmbedderPolicy: { policy: "require-corp" },
+
+    // 🔥 Cambios importantes:
+    crossOriginEmbedderPolicy: false,               // ← Desactivado para que Prometheus funcione
     crossOriginOpenerPolicy: { policy: "same-origin" },
     crossOriginResourcePolicy: { policy: "same-origin" },
   })

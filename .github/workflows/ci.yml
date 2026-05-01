@@ -61,7 +61,7 @@ jobs:
           docker compose up -d --build
           sleep 20
           docker compose ps
-          curl -I http://mini-secure-app:3001 || true
+          curl -I http://localhost:3001 || true
 
       # ------------------------------
       # ZAP SCAN
@@ -69,7 +69,7 @@ jobs:
       - name: Ejecutar ZAP Scan
         uses: zaproxy/action-baseline@v0.15.0
         with:
-          target: 'http://mini-secure-app:3001'
+          target: 'http://localhost:3001'
           cmd_options: '-r report_html.html'
           allow_issue_writing: false
 

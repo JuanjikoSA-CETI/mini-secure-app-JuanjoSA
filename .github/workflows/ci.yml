@@ -35,10 +35,26 @@ jobs:
       - name: Escaneo de dependencias
         run: npm audit || true
 
+      # ------------------------------
+      # LEVANTAR MONITORING
+      # ------------------------------
+      - name: Levantar monitoring
+        working-directory: ${{ github.workspace }}/monitoring
+        run: |
+          docker compose down || true
+          docker compose up -d --build
+
+      # ------------------------------
+      # CREAR RED EXTERNA PARA LA APP
+      # ------------------------------
       - name: Crear red monitoring-net si no existe
         run: docker network create monitoring-net || true
 
-      - name: Levantar contenedores
+      # ------------------------------
+      # LEVANTAR APP PRINCIPAL
+      # ------------------------------
+      - name: Levantar contenedores de la app
+        working-directory: ${{ github.workspace }}
         run: |
           docker compose down || true
           docker compose up -d --build
@@ -46,6 +62,9 @@ jobs:
           docker compose ps
           curl -I http://mini-secure-app:3001 || true
 
+      # ------------------------------
+      # ZAP SCAN
+      # ------------------------------
       - name: Ejecutar ZAP Scan
         uses: zaproxy/action-baseline@v0.15.0
         with:
@@ -53,6 +72,9 @@ jobs:
           cmd_options: '-r report_html.html'
           allow_issue_writing: false
 
+      # ------------------------------
+      # SUBIR REPORTE
+      # ------------------------------
       - name: subir reporte
         uses: actions/upload-artifact@v4
         with:

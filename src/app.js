@@ -13,9 +13,9 @@ app.use(
       directives: {
         defaultSrc: ["'self'"],
         scriptSrc: ["'self'"],
-        styleSrc: ["'self'"], // quitamos unsafe-inline
+        styleSrc: ["'self'"],
         imgSrc: ["'self'", "data:"],
-        fontSrc: ["'self'"], // quitamos https:
+        fontSrc: ["'self'"],
         objectSrc: ["'none'"],
         frameAncestors: ["'none'"],
         baseUri: ["'self'"],
@@ -35,8 +35,12 @@ app.use(
         fullscreen: ["self"],
       },
     },
+    crossOriginEmbedderPolicy: { policy: "require-corp" },
+    crossOriginOpenerPolicy: { policy: "same-origin" },
+    crossOriginResourcePolicy: { policy: "same-origin" },
   })
 );
+
 
 const PORT = process.env.PORT || 3001;
 
@@ -47,8 +51,16 @@ client.collectDefaultMetrics({ register });
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 const csrf = require('csurf');
-app.use(csrf({ cookie: true }));
 
+app.use(
+  csrf({
+    cookie: {
+      httpOnly: true,
+      secure: true,
+      sameSite: "Strict",
+    },
+  })
+);
 
 // Endpoint /metrics para Prometheus  <-- NUEVO
 app.get('/metrics', async (req, res) => {

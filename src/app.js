@@ -134,12 +134,15 @@ app.get('/tickets', (req, res) => {
 
 // Formulario nuevo ticket
 app.get('/ticket/new', (req, res) => {
+  const csrfToken = req.csrfToken();
+
   res.send(`
     <html>
       <head><title>Nuevo ticket</title></head>
       <body>
         <h1>Crear ticket</h1>
         <form action="/ticket/new" method="POST">
+          <input type="hidden" name="_csrf" value="${csrfToken}">
           <label>Título:</label>
           <input type="text" name="title" /><br/><br/>
           <label>Descripción:</label><br/>
@@ -151,6 +154,7 @@ app.get('/ticket/new', (req, res) => {
     </html>
   `);
 });
+
 
 app.post('/ticket/new', (req, res) => {
   const { title, description } = req.body;
@@ -250,4 +254,3 @@ if (process.env.NODE_ENV !== 'test') {
 
 module.exports = app;
 
-// comentario

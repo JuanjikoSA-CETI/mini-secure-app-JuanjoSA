@@ -5,22 +5,35 @@ const app = express();
 const cookieParser = require('cookie-parser');
 app.use(cookieParser());
 
-const helmet = require('helmet');
-app.use(helmet());
+const helmet = require("helmet");
 
 app.use(
-  helmet.contentSecurityPolicy({
-    useDefaults: true,
-    directives: {
-      "default-src": ["'self'"],
-      "script-src": ["'self'"],
-      "style-src": ["'self'", "'unsafe-inline'"],
-      "img-src": ["'self'", "data:"],
-      "object-src": ["'none'"],
-      "frame-ancestors": ["'none'"]
-    }
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'"],
+        styleSrc: ["'self'", "'unsafe-inline'"],
+        imgSrc: ["'self'", "data:"],
+        objectSrc: ["'none'"],
+        frameAncestors: ["'none'"],
+      },
+    },
+    crossOriginEmbedderPolicy: true,
+    crossOriginOpenerPolicy: { policy: "same-origin" },
+    crossOriginResourcePolicy: { policy: "same-origin" },
+    frameguard: { action: "deny" },
+    noSniff: true,
+    referrerPolicy: { policy: "no-referrer" },
+    permissionsPolicy: {
+      fullscreen: ["'self'"],
+      camera: ["'none'"],
+      microphone: ["'none'"],
+      geolocation: ["'none'"],
+    },
   })
 );
+
 
 
 const PORT = process.env.PORT || 3001;

@@ -29,17 +29,21 @@ jobs:
       - name: SAST con Semgrep
         run: |
           export PATH=$PATH:/home/juanjo/.local/bin
-          pip3 install semgrep --user
+          pip3 install --user semgrep
           semgrep --config=auto
 
       - name: Escaneo de dependencias
         run: npm audit || true
+
+      - name: Crear red monitoring-net si no existe
+        run: docker network create monitoring-net || true
 
       - name: Levantar contenedores
         run: |
           docker compose down || true
           docker compose up -d --build
           sleep 20
+          docker compose ps
           curl -I http://mini-secure-app:3001 || true
 
       - name: Ejecutar ZAP Scan

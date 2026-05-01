@@ -21,9 +21,10 @@ describe('Mini Secure Tickets App', () => {
     const postRes = await agent
       .post('/ticket/new')
       .send({
-        titulo: 'Ticket de prueba',
-        descripcion: 'Descripción de prueba',
+        title: 'Ticket de prueba',
+        description: 'Descripción de prueba',
         _csrf: csrfToken
+      });
       });
 
     expect(postRes.statusCode).toBe(200);

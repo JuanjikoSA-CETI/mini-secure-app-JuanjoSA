@@ -41,7 +41,6 @@ app.use(
         camera: ["'none'"],
         microphone: ["'none'"],
         geolocation: ["'none'"],
-        fullscreen: ["'self'"]
       }
     }
   })

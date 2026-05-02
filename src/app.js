@@ -24,23 +24,29 @@ app.use(
         upgradeInsecureRequests: [],
       },
     },
+
     referrerPolicy: { policy: "no-referrer" },
     frameguard: { action: "deny" },
     noSniff: true,
-    permissionsPolicy: {
-      features: {
-        camera: ["none"],
-        microphone: ["none"],
-        geolocation: ["none"],
-        fullscreen: ["self"],
-      },
-    },
 
-    crossOriginEmbedderPolicy: false,
+    // 🔥 FIX 1 — Cross-Origin-Embedder-Policy
+    crossOriginEmbedderPolicy: { policy: "require-corp" },
+
     crossOriginOpenerPolicy: { policy: "same-origin" },
     crossOriginResourcePolicy: { policy: "same-origin" },
+
+    // 🔥 FIX 2 — Permissions-Policy (Helmet 7 syntax)
+    permissionsPolicy: {
+      features: {
+        camera: ["'none'"],
+        microphone: ["'none'"],
+        geolocation: ["'none'"],
+        fullscreen: ["'self'"]
+      }
+    }
   })
 );
+
 
 const PORT = process.env.PORT || 3001;
 

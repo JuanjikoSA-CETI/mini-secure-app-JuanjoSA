@@ -7,6 +7,9 @@ app.use(cookieParser());
 
 const helmet = require("helmet");
 
+// ------------------------------
+// HELMET CONFIG
+// ------------------------------
 app.use(
   helmet({
     contentSecurityPolicy: {
@@ -29,22 +32,24 @@ app.use(
     frameguard: { action: "deny" },
     noSniff: true,
 
-    // 🔥 FIX 1 — Cross-Origin-Embedder-Policy
+    // COEP / COOP / CORP
     crossOriginEmbedderPolicy: { policy: "require-corp" },
-
     crossOriginOpenerPolicy: { policy: "same-origin" },
-    crossOriginResourcePolicy: { policy: "same-origin" },
-
-    // 🔥 FIX 2 — Permissions-Policy (Helmet 7 syntax)
-    permissionsPolicy: {
-      features: {
-        camera: ["'none'"],
-        microphone: ["'none'"],
-        geolocation: ["'none'"],
-      }
-    }
+    crossOriginResourcePolicy: { policy: "same-origin" }
   })
 );
+
+// ------------------------------
+// FIX PARA HELMET 8 — Permissions-Policy manual
+// ------------------------------
+app.use((req, res, next) => {
+  res.setHeader(
+    "Permissions-Policy",
+    "camera=(), microphone=(), geolocation=()"
+  );
+  next();
+});
+
 
 
 const PORT = process.env.PORT || 3001;
